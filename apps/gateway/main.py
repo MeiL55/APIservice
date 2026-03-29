@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.middleware.logging_middleware import LoggingMiddleware
+from middleware.logging_middleware import LoggingMiddleware
 
 app = FastAPI(
     title="Gateway Service",
