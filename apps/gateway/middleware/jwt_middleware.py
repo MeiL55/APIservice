@@ -7,6 +7,8 @@ app = FastAPI()
 
 DevSecret = "herro123"
 ALGORITHM = "HS256"
+ISSUER = "Joey"
+AUDIENCE = "Joey's ppl"
 
 @app.middleware("http")
 async def jwt_middleware_header(request: Request, call_next):
@@ -25,8 +27,14 @@ async def jwt_middleware_header(request: Request, call_next):
             token, 
             DevSecret, 
             algorithms=[ALGORITHM], 
-            options={"require": ["exp", "sub"]}
+            options={"require": ["exp", "sub", "iss", "aud"]}
         )
+
+        if user_data.get("iss") != ISSUER:
+            return JSONResponse(status_code=401, content={"error": "Invalid token issuer"})
+        if user_data.get("aud") != AUDIENCE:
+            return JSONResponse(status_code=401, content={"error": "Invalid token audience"})
+        
     except jwt.MissingRequiredClaimError as e:
         return JSONResponse(
             status_code=401,

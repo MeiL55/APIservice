@@ -21,6 +21,8 @@ def testWithUserNameOnly():
     assert payload["role"] == "user"
     assert "iat" in payload
     assert "exp" in payload
+    assert payload["iss"] == ISSUER
+    assert payload["aud"] == AUDIENCE  
 
 def testWithBoth():
     response = client.post("/login", json={"username": "Joey", "role": "Software Developer"})
@@ -31,6 +33,8 @@ def testWithBoth():
     assert payload["role"] == "Software Developer"
     assert "iat" in payload
     assert "exp" in payload
+    assert payload["iss"] == ISSUER
+    assert payload["aud"] == AUDIENCE
 
 def testWithoutUsernameRejection():
     response = client.post("/login", json={})

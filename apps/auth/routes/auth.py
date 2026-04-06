@@ -6,6 +6,8 @@ app = FastAPI()
 
 DevSecret = "herro123"
 ALGORITHM = "HS256"
+ISSUER = "Joey" # os.getenv("JWT_ISSUER", "auth-service")
+AUDIENCE = "Joey's ppl" #os.getenv("JWT_AUDIENCE", "gamefest-service")
 
 class LoginRequest(BaseModel):
     username: str
@@ -17,7 +19,9 @@ def createAccessToken(username: str, role: str | None) -> str:
         "sub": username,
         "role": role or "user",
         "iat": int(time.timestamp()),
-        "exp": int((time + timedelta(hours=1)).timestamp())
+        "exp": int((time + timedelta(hours=1)).timestamp()),
+        "iss": ISSUER,
+        "aud": AUDIENCE
 
     }
     return jwt.encode(payload, DevSecret, algorithm = ALGORITHM)
